@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/employee")
 public class PayrollController {
     @Autowired
     private PayrollService employeePayrollService;
@@ -22,9 +22,9 @@ public class PayrollController {
      *
      * @return List of all the data in the database.
      */
-    @GetMapping(value = "/get-all-atm")
-    public ResponseEntity<List<EmployeeResponseDto>> getAllAtm() {
-        return new ResponseEntity<>(employeePayrollService.getAllAtm(), HttpStatus.OK);
+    @GetMapping(value = "/getAllEmployees")
+    public ResponseEntity<List<EmployeeResponseDto>> getAllEmployee() {
+        return new ResponseEntity<>(employeePayrollService.getAllEmployees(), HttpStatus.OK);
     }
 
     /**
@@ -33,7 +33,7 @@ public class PayrollController {
      * @param employeePayrollDto the data that is to saved in the database.
      * @return string to say that if the data is saved successfully or not.
      */
-    @PostMapping(value = "/add-atm")
+    @PostMapping(value = "/addEmployee")
     public ResponseEntity<String> addEmployee(@Valid @RequestBody PayrollDto employeePayrollDto) {
         return new ResponseEntity<String>(employeePayrollService.addEmployee(employeePayrollDto), HttpStatus.OK);
     }
@@ -45,7 +45,7 @@ public class PayrollController {
      * @param employeePayrollDto the data to be updated
      * @return string to say that if the data is updated successfully or not.
      */
-    @PutMapping("/edit-atm")
+    @PutMapping("/editEmployee")
     public ResponseEntity<String> editEmployee(@Valid @RequestParam int id,
                                                @RequestBody PayrollDto employeePayrollDto) {
         return new ResponseEntity<>(employeePayrollService.editEmployee(id, employeePayrollDto), HttpStatus.OK);
@@ -57,8 +57,8 @@ public class PayrollController {
      * @param id of the data to be deleted.
      * @return string to say that if the data is deleted successfully or not.
      */
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteAtm(@Valid @RequestParam int id) {
+    @DeleteMapping("/removeEmployee")
+    public ResponseEntity<String> deleteEmployee(@Valid @RequestParam int id) {
         return new ResponseEntity<>(employeePayrollService.deleteEmployee(id), HttpStatus.OK);
     }
 }

@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class PayrollService {
-    private static final String ATM_ADDED_SUCCESSFULLY = "Atm Added Successfully";
-    private static final String ATM_EDITED_SUCCESSFULLY = "Atm edited successfully";
-    private static final String ATM_DELETED_SUCCESSFULLY = "Atm delete successful";
+    private static final String EMPLOYEE_ADDED_SUCCESSFULLY = "Employee Added Successfully";
+    private static final String EMPLOYEE_EDITED_SUCCESSFULLY = "Employee edited successfully";
+    private static final String EMPLOYEE_DELETED_SUCCESSFULLY = "Employee delete successful";
     private static final String INVALID_ID = "Invalid id";
 
     @Autowired
@@ -34,7 +34,7 @@ public class PayrollService {
      *
      * @return List of all the data in the database.
      */
-    public List<EmployeeResponseDto> getAllAtm() {
+    public List<EmployeeResponseDto> getAllEmployees() {
         return employeePayrollRepository.findAll()
                 .stream()
                 .map(atmEntity -> modelMapper.map(atmEntity, EmployeeResponseDto.class))
@@ -47,7 +47,7 @@ public class PayrollService {
      * @param id to be checked if the data exists or not.
      * @return boolean true if data exists else false.
      */
-    private Employee findAtmEntityById(int id) {
+    private Employee findEmployeeById(int id) {
         return employeePayrollRepository.findById(id).orElseThrow(() -> new NoDataFoundException(INVALID_ID));
     }
 
@@ -60,7 +60,7 @@ public class PayrollService {
     public String addEmployee(PayrollDto employeePayrollDto) {
         Employee employee = modelMapper.map(employeePayrollDto, Employee.class);
         employeePayrollRepository.save(employee);
-        return ATM_ADDED_SUCCESSFULLY;
+        return EMPLOYEE_ADDED_SUCCESSFULLY;
     }
 
     /**
@@ -72,10 +72,10 @@ public class PayrollService {
      * @throws NoDataFoundException if there is a invalid id passed as argument.
      */
     public String editEmployee(int id,  PayrollDto employeePayrollDto) throws NoDataFoundException{
-        Employee employee = findAtmEntityById(id);
+        Employee employee = findEmployeeById(id);
         employee = payrollBuilder.buildAtmEntity(employeePayrollDto, employee);
         employeePayrollRepository.save(employee);
-        return ATM_EDITED_SUCCESSFULLY;
+        return EMPLOYEE_EDITED_SUCCESSFULLY;
     }
 
     /**
@@ -86,8 +86,8 @@ public class PayrollService {
      * @throws NoDataFoundException if there is a invalid id passed as argument.
      */
     public String deleteEmployee(int id) throws NoDataFoundException {
-        Employee employee = findAtmEntityById(id);
+        Employee employee = findEmployeeById(id);
         employeePayrollRepository.delete(employee);
-        return ATM_DELETED_SUCCESSFULLY;
+        return EMPLOYEE_DELETED_SUCCESSFULLY;
     }
 }

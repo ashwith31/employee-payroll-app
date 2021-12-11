@@ -10,7 +10,6 @@ import java.util.Date;
 public class EmployeeResponseDto {
     private int id;
     private String name;
-    private String imagePath;
     private String gender;
     private String salary;
     private LocalDateTime startDate;

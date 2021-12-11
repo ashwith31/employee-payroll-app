@@ -63,17 +63,4 @@ public class EmployeePayrollGlobalException extends ResponseEntityExceptionHandl
 
         return new ResponseEntity<Object>(body, headers, status);
     }
-
-    /**
-     * This method is to handle the constraint violation exception globally.
-     *
-     * @param webRequest object of WebRequest.
-     * @return ResponseEntity of type object .
-     */
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolationException(WebRequest webRequest) {
-        ResponseDto responseDto = new ResponseDto
-                (HttpStatus.NOT_ACCEPTABLE, "Card Number and CVV should be unique");
-        return new ResponseEntity<>(responseDto, responseDto.getHttpStatus());
-    }
 }
