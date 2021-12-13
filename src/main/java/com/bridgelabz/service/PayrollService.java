@@ -4,7 +4,6 @@ import com.bridgelabz.builder.PayrollBuilder;
 import com.bridgelabz.dto.PayrollDto;
 import com.bridgelabz.dto.EmployeeResponseDto;
 import com.bridgelabz.exception.NoDataFoundException;
-import com.bridgelabz.model.Employee;
 import com.bridgelabz.repository.EmployeePayrollRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,7 @@ public class PayrollService {
      * @param id to be checked if the data exists or not.
      * @return boolean true if data exists else false.
      */
-    private Employee findEmployeeById(int id) {
+    private com.bridgelabz.model.Employee findEmployeeById(int id) {
         return employeePayrollRepository.findById(id).orElseThrow(() -> new NoDataFoundException(INVALID_ID));
     }
 
@@ -58,7 +57,7 @@ public class PayrollService {
      * @return string to say that if the data is saved successfully or not.
      */
     public String addEmployee(PayrollDto employeePayrollDto) {
-        Employee employee = modelMapper.map(employeePayrollDto, Employee.class);
+        com.bridgelabz.model.Employee employee = modelMapper.map(employeePayrollDto, com.bridgelabz.model.Employee.class);
         employeePayrollRepository.save(employee);
         return EMPLOYEE_ADDED_SUCCESSFULLY;
     }
@@ -72,7 +71,7 @@ public class PayrollService {
      * @throws NoDataFoundException if there is a invalid id passed as argument.
      */
     public String editEmployee(int id,  PayrollDto employeePayrollDto) throws NoDataFoundException{
-        Employee employee = findEmployeeById(id);
+        com.bridgelabz.model.Employee employee = findEmployeeById(id);
         employee = payrollBuilder.buildAtmEntity(employeePayrollDto, employee);
         employeePayrollRepository.save(employee);
         return EMPLOYEE_EDITED_SUCCESSFULLY;
@@ -86,7 +85,7 @@ public class PayrollService {
      * @throws NoDataFoundException if there is a invalid id passed as argument.
      */
     public String deleteEmployee(int id) throws NoDataFoundException {
-        Employee employee = findEmployeeById(id);
+        com.bridgelabz.model.Employee employee = findEmployeeById(id);
         employeePayrollRepository.delete(employee);
         return EMPLOYEE_DELETED_SUCCESSFULLY;
     }
