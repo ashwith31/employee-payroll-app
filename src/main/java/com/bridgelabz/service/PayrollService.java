@@ -37,7 +37,7 @@ public class PayrollService {
     public List<EmployeeResponseDto> getAllEmployees() {
         return employeePayrollRepository.findAll()
                 .stream()
-                .map(atmEntity -> modelMapper.map(atmEntity, EmployeeResponseDto.class))
+                .map(employee -> modelMapper.map(employee, EmployeeResponseDto.class))
                 .collect(Collectors.toList());
     }
 
