@@ -2,10 +2,14 @@ package com.bridgelabz.dto;
 
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
-import java.util.Date;
 
+/********************************************************************************************************
+ * Purpose: This is a pojo class which is used to for generating objects.
+ *
+ * @author Ashwith
+ * @since 11/12/21
+ *******************************************************************************************************/
 @Data
 public class EmployeeResponseDto {
     private int id;

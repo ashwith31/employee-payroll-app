@@ -6,6 +6,7 @@ import com.bridgelabz.dto.PayrollDto;
 import com.bridgelabz.exception.NoDataFoundException;
 import com.bridgelabz.model.Employee;
 import com.bridgelabz.repository.EmployeePayrollRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -24,6 +25,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PayrollServiceTests {
+
+    Employee employee = new Employee();
+    PayrollDto payrollDto = new PayrollDto();
+
     @Mock
     ModelMapper modelMapper;
     @InjectMocks
@@ -33,14 +38,22 @@ public class PayrollServiceTests {
     @Mock
     private PayrollBuilder payrollBuilder;
 
-    @Test
-    void whenGetAllEmployeeMethodIsCalled_ShouldReturnListOfEmployeeResponseDto() {
-        List<Employee> employeeList = new ArrayList<>();
-        Employee employee = new Employee();
+
+    @BeforeEach
+    void setUp(){
         employee.setId(1);
         employee.setName("Ashwith");
         employee.setGender("Male");
         employee.setDepartment("Backend");
+
+        payrollDto.setName("Ashwith");
+        payrollDto.setGender("Male");
+        payrollDto.setDepartment("Backend");
+    }
+
+    @Test
+    void givenGetAllEmployeeMethodIsCalled_ShouldReturnListOfEmployeeResponseDto() {
+        List<Employee> employeeList = new ArrayList<>();
         employeeList.add(employee);
         Employee employee2 = new Employee();
         employee2.setId(2);
@@ -66,71 +79,48 @@ public class PayrollServiceTests {
         when(employeePayrollRepository.findAll()).thenReturn(employeeList);
         when(modelMapper.map(employeeList.get(0), EmployeeResponseDto.class)).thenReturn(employeeResponseDto);
         when(modelMapper.map(employeeList.get(1), EmployeeResponseDto.class)).thenReturn(employeeResponseDto2);
-        List<EmployeeResponseDto> actualListOfAtm = payrollService.getAllEmployees();
-        assertEquals(2, actualListOfAtm.size());
-        assertEquals(employeeResponseList, actualListOfAtm);
+        List<EmployeeResponseDto> actualListOfEmployee = payrollService.getAllEmployees();
+        assertEquals(2, actualListOfEmployee.size());
+        assertEquals(employeeResponseList, actualListOfEmployee);
     }
 
     @Test
-    void whenAddAtmCalled_shouldAddAtmAndGenerateSuccessMessage() {
-        Employee employee = new Employee();
-        employee.setId(1);
-        employee.setName("Ashwith");
-        employee.setGender("Male");
-        employee.setDepartment("Backend");
-
-        PayrollDto payrollDto = new PayrollDto();
-        payrollDto.setName("Ashwith");
-        payrollDto.setGender("Male");
-        payrollDto.setDepartment("Backend");
-
+    void givenAddEmployeeMethodIsCalled_ShouldAddEmployeeAndGenerateSuccessMessage() {
         when(modelMapper.map(payrollDto, Employee.class)).thenReturn(employee);
-
         String actualStringMessage = payrollService.addEmployee(payrollDto);
-
         assertEquals("Employee Added Successfully", actualStringMessage);
         verify(employeePayrollRepository, times(1)).save(employee);
     }
 
     @Test
-    void whenEditEmployeeMethodIsCalled_IfNotFoundId_shouldThrowExceptionMessage() {
+    void givenEditEmployeeMethodIsCalled_WhenIdIsNotPresent_ShouldThrowExceptionMessage() {
         int id = 1;
-        PayrollDto payrollDto = new PayrollDto();
-        payrollDto.setName("Ashwith");
-        payrollDto.setGender("Male");
-        payrollDto.setDepartment("Backend");
-
         when(employeePayrollRepository.findById(id)).thenReturn(Optional.empty());
         assertThrows(NoDataFoundException.class, () -> payrollService.editEmployee(id, payrollDto));
     }
 
     @Test
-    void whenEditEmployeeMethodIsCalled_ShouldUpdateEmployeeDetailsAndReturnSuccessMessage() {
-        ArgumentCaptor<Employee> atmEntityArgumentCaptor = ArgumentCaptor.forClass(Employee.class);
+    void givenEditEmployeeMethodIsCalled_ShouldUpdateEmployeeDetailsAndReturnSuccessMessage() {
+        ArgumentCaptor<Employee> employeeEntityArgumentCaptor = ArgumentCaptor.forClass(Employee.class);
 
         int id = 1;
-        PayrollDto payrollDto = new PayrollDto();
-        payrollDto.setName("Ashwith");
-        payrollDto.setGender("Male");
-        payrollDto.setDepartment("Backend");
+        Employee employee2 = new Employee();
 
-        Employee employee = new Employee();
-
-        when(employeePayrollRepository.findById(id)).thenReturn(Optional.of(employee));
-        employee.setName(payrollDto.getName());
-        employee.setGender(payrollDto.getGender());
-        employee.setDepartment(payrollDto.getDepartment());
-        when(payrollBuilder.buildAtmEntity(payrollDto, employee)).thenReturn(employee);
+        when(employeePayrollRepository.findById(id)).thenReturn(Optional.of(employee2));
+        employee2.setName(payrollDto.getName());
+        employee2.setGender(payrollDto.getGender());
+        employee2.setDepartment(payrollDto.getDepartment());
+        when(payrollBuilder.buildEmployeeEntity(payrollDto, employee2)).thenReturn(employee2);
         String actualSuccessMessage = payrollService.editEmployee(id, payrollDto);
-        verify(employeePayrollRepository, times(1)).save(atmEntityArgumentCaptor.capture());
+        verify(employeePayrollRepository, times(1)).save(employeeEntityArgumentCaptor.capture());
         assertEquals("Employee edited successfully", actualSuccessMessage);
-        assertEquals(payrollDto.getName(), atmEntityArgumentCaptor.getValue().getName());
-        assertEquals(payrollDto.getGender(), atmEntityArgumentCaptor.getValue().getGender());
-        assertEquals(payrollDto.getDepartment(), atmEntityArgumentCaptor.getValue().getDepartment());
+        assertEquals(payrollDto.getName(), employeeEntityArgumentCaptor.getValue().getName());
+        assertEquals(payrollDto.getGender(), employeeEntityArgumentCaptor.getValue().getGender());
+        assertEquals(payrollDto.getDepartment(), employeeEntityArgumentCaptor.getValue().getDepartment());
     }
 
     @Test
-    void whenDeleteEmployeeMethodIsCalled_IfIdNotFound_shouldThrowExceptionMessage() {
+    void givenDeleteEmployeeMethodIsCalled_IfIdNotFound_shouldThrowExceptionMessage() {
         int id = 1;
         when(employeePayrollRepository.findById(id)).thenReturn(Optional.empty());
         assertThrows(NoDataFoundException.class, () -> payrollService.deleteEmployee(id));
@@ -139,12 +129,6 @@ public class PayrollServiceTests {
     @Test
     void givenDeleteEmployeeMethodIsCalledWithAnId_ShouldDeleteTheDataOfThatId() {
         int id = 1;
-        Employee employee = new Employee();
-        employee.setId(1);
-        employee.setName("Ashwith");
-        employee.setGender("Male");
-        employee.setDepartment("Backend");
-
         when(employeePayrollRepository.findById(id)).thenReturn(Optional.of(employee));
         String actualMessage = payrollService.deleteEmployee(id);
         assertEquals("Employee delete successful", actualMessage);

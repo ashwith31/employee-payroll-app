@@ -2,7 +2,10 @@ package com.bridgelabz.controller;
 
 import com.bridgelabz.dto.EmployeeResponseDto;
 import com.bridgelabz.dto.PayrollDto;
+import com.bridgelabz.exception.NoDataFoundException;
 import com.bridgelabz.service.PayrollService;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,14 +22,24 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PayrollControllerTests {
+
+    PayrollDto payrollDto = new PayrollDto();
+
     @InjectMocks
     private PayrollController payrollController;
 
     @Mock
     private PayrollService payrollService;
 
+    @BeforeEach
+    void setUp(){
+        payrollDto.setName("Ashwith");
+        payrollDto.setGender("Male");
+        payrollDto.setDepartment("Backend");
+    }
+
     @Test
-    void whenGetAllEmployeeMethodIsCalled_ShouldReturnTheListOfAllEmployeeResponseDto() {
+    void givenGetAllEmployeeMethodIsCalled_ShouldReturnTheListOfAllEmployeeResponseDto() {
         List<EmployeeResponseDto> payrollResponseDtoList = new ArrayList<>();
         EmployeeResponseDto employeeResponseDto = new EmployeeResponseDto();
         employeeResponseDto.setName("Ashwith");
@@ -48,39 +61,45 @@ public class PayrollControllerTests {
     }
 
     @Test
-    void whenAddEmployeeMethodIsCalled_ShouldAddEmployeeAndGenerateSuccessMessage() {
+    void givenAddEmployeeMethodIsCalled_ShouldAddEmployeeAndGenerateSuccessMessage() {
         String successString = "Employee Added Successfully";
         ResponseEntity<String> expectedResponseEntity = new ResponseEntity<>(successString, HttpStatus.OK);
-        PayrollDto payrollDto = new PayrollDto();
-        payrollDto.setName("Ashwith");
-        payrollDto.setGender("Male");
-        payrollDto.setDepartment("Backend");
         when(payrollService.addEmployee(payrollDto)).thenReturn(successString);
         ResponseEntity<String> actualResponseString = payrollController.addEmployee(payrollDto);
         assertEquals(expectedResponseEntity, actualResponseString);
     }
 
     @Test
-    void whenEditEmployeeMethodIsCalled_ShouldUpdateEmployeeAndGenerateSuccessMessage() {
+    void givenEditEmployeeMethodIsCalled_ShouldUpdateEmployeeAndGenerateSuccessMessage() {
         String successString = "Employee edited successfully";
         ResponseEntity<String> expectedResponseEntity = new ResponseEntity<>(successString, HttpStatus.OK);
         int id = 1;
-        PayrollDto payrollDto = new PayrollDto();
-        payrollDto.setName("Ashwith");
-        payrollDto.setGender("Male");
-        payrollDto.setDepartment("Backend");
         when(payrollService.editEmployee(id, payrollDto)).thenReturn(successString);
         ResponseEntity<String> actualResponseString = payrollController.editEmployee(id, payrollDto);
         assertEquals(expectedResponseEntity, actualResponseString);
     }
 
     @Test
-    void whenDeleteEmployeeMethodIsCalled_ShouldDeleteEmployeeAndGenerateSuccessMessage() {
+    void givenEditEmployeeMethodIsCalled_WhenIdNotFound_ShouldThrowException() {
+        int id = 1;
+        when(payrollService.editEmployee(id, payrollDto)).thenThrow(NoDataFoundException.class);
+        Assertions.assertThrows(NoDataFoundException.class, () -> payrollController.editEmployee(id, payrollDto));
+    }
+
+    @Test
+    void givenDeleteEmployeeMethodIsCalled_ShouldDeleteEmployeeAndGenerateSuccessMessage() {
         String successString = "Employee delete successful";
         ResponseEntity<String> expectedResponseEntity = new ResponseEntity<>(successString, HttpStatus.OK);
         int id = 1;
         when(payrollService.deleteEmployee(id)).thenReturn(successString);
         ResponseEntity<String> actualResponseString = payrollController.deleteEmployee(id);
         assertEquals(expectedResponseEntity, actualResponseString);
+    }
+
+    @Test
+    void givenDeleteEmployeeMethodIsCalled_WhenIdNotFound_ShouldThrowException() {
+        int id = 1;
+        when(payrollService.deleteEmployee(id)).thenThrow(NoDataFoundException.class);
+        Assertions.assertThrows(NoDataFoundException.class, () -> payrollController.deleteEmployee(id));
     }
 }

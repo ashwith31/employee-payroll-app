@@ -1,7 +1,7 @@
 package com.bridgelabz.controller;
 
-import com.bridgelabz.dto.PayrollDto;
 import com.bridgelabz.dto.EmployeeResponseDto;
+import com.bridgelabz.dto.PayrollDto;
 import com.bridgelabz.service.PayrollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**********************************************************************************************************************
+ * Purpose: This class is to make different HTTP request method calls using Rest controller.
+ *
+ * @author Ashwith
+ * @since 11/12/21
+ *********************************************************************************************************************/
 @RestController
 @RequestMapping("/employee")
 public class PayrollController {
@@ -41,7 +47,7 @@ public class PayrollController {
     /**
      * This method is to update the data in the database based on id of that database.
      *
-     * @param id     of the data to be updated.
+     * @param id                 of the data to be updated.
      * @param employeePayrollDto the data to be updated
      * @return string to say that if the data is updated successfully or not.
      */

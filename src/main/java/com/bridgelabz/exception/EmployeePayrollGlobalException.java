@@ -11,13 +11,18 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.Valid;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/********************************************************************************************************
+ * Purpose: This is a Global Exception class.It handles the exceptions globally.
+ *
+ * @author Ashwith
+ * @since 11/12/21
+ *******************************************************************************************************/
 @ControllerAdvice
 public class EmployeePayrollGlobalException extends ResponseEntityExceptionHandler {
     /**

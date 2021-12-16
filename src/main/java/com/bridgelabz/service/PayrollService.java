@@ -1,9 +1,10 @@
 package com.bridgelabz.service;
 
 import com.bridgelabz.builder.PayrollBuilder;
-import com.bridgelabz.dto.PayrollDto;
 import com.bridgelabz.dto.EmployeeResponseDto;
+import com.bridgelabz.dto.PayrollDto;
 import com.bridgelabz.exception.NoDataFoundException;
+import com.bridgelabz.model.Employee;
 import com.bridgelabz.repository.EmployeePayrollRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+/********************************************************************************************************
+ * Purpose: This is a service class.It defines all the methods which are required in the controller class.
+ *
+ * @author Ashwith
+ * @since 11/12/21
+ *******************************************************************************************************/
 @Service
 public class PayrollService {
     private static final String EMPLOYEE_ADDED_SUCCESSFULLY = "Employee Added Successfully";
@@ -57,7 +63,7 @@ public class PayrollService {
      * @return string to say that if the data is saved successfully or not.
      */
     public String addEmployee(PayrollDto employeePayrollDto) {
-        com.bridgelabz.model.Employee employee = modelMapper.map(employeePayrollDto, com.bridgelabz.model.Employee.class);
+        Employee employee = modelMapper.map(employeePayrollDto, com.bridgelabz.model.Employee.class);
         employeePayrollRepository.save(employee);
         return EMPLOYEE_ADDED_SUCCESSFULLY;
     }
@@ -65,14 +71,14 @@ public class PayrollService {
     /**
      * This method is to update the data in the database based on id of that database.
      *
-     * @param id of the data to be updated.
+     * @param id                 of the data to be updated.
      * @param employeePayrollDto the data to be updated
      * @return string to say that if the data is updated successfully or not.
      * @throws NoDataFoundException if there is a invalid id passed as argument.
      */
-    public String editEmployee(int id,  PayrollDto employeePayrollDto) throws NoDataFoundException{
-        com.bridgelabz.model.Employee employee = findEmployeeById(id);
-        employee = payrollBuilder.buildAtmEntity(employeePayrollDto, employee);
+    public String editEmployee(int id, PayrollDto employeePayrollDto) throws NoDataFoundException {
+        Employee employee = findEmployeeById(id);
+        employee = payrollBuilder.buildEmployeeEntity(employeePayrollDto, employee);
         employeePayrollRepository.save(employee);
         return EMPLOYEE_EDITED_SUCCESSFULLY;
     }
@@ -85,7 +91,7 @@ public class PayrollService {
      * @throws NoDataFoundException if there is a invalid id passed as argument.
      */
     public String deleteEmployee(int id) throws NoDataFoundException {
-        com.bridgelabz.model.Employee employee = findEmployeeById(id);
+        Employee employee = findEmployeeById(id);
         employeePayrollRepository.delete(employee);
         return EMPLOYEE_DELETED_SUCCESSFULLY;
     }

@@ -3,16 +3,20 @@ package com.bridgelabz.model;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import java.time.LocalDateTime;
+/********************************************************************************************************
+ * Purpose: This is the entity class where all the messages are stored in the database.
+ *
+ * @author Ashwith
+ * @since 2/12/21
+ *******************************************************************************************************/
 @Entity
 @Data
 public class Employee {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "NAME", length = 35)
     private String name;
